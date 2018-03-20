@@ -155,6 +155,7 @@ function checkout {
     ref=*|h=*|branch=*|tag=*) local ref="${query#*=}" ;;
     *)                        local ref="$query" ;;
   esac
+  ref=${ref:=$branch}
   if [[ -d "$src_dir" ]]
   then msg "Found directory \`$src_dir'; skipping checkout."
   else msg "Cloning: $repository at $ref" && git clone "$repository" "$src_dir"
@@ -185,7 +186,7 @@ function build {(
   fi
 
   "$rel_src_dir"/configure $(configure_opts)
-  make
+  make -j
 )}
 
 function os_release {
@@ -473,7 +474,8 @@ function url_split {
 
 # Return Mesos configuration options
 function configure_opts {
-  local options="--prefix=/usr"
+  local options="--prefix=/usr --enable-libevent --enable-ssl"
+  #local options="--prefix=/usr"
   if [[ "$version" == 0.18.0-rc4 ]] || [[ "$repo" =~ 0\.18\.0-rc4$ ]]
   then options+=" --without-cxx11"                # See: MESOS-750 and MESOS-1095
   fi
