@@ -186,7 +186,7 @@ function build {(
   fi
 
   "$rel_src_dir"/configure $(configure_opts)
-  make -j
+  make -j4
 )}
 
 function os_release {
